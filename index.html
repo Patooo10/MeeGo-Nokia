@@ -2,110 +2,174 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>MeeGo: el sistema que pudo cambiar a Nokia</title>
+<title>Test MeeGo</title>
+
 <style>
 body{
-font-family: Arial;
-background:#111;
+margin:0;
+font-family:'Segoe UI', sans-serif;
+background: linear-gradient(135deg,#141e30,#243b55);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
 color:white;
-text-align:center;
-padding:20px;
 }
-.container{
+
+.quiz-box{
+background:#1f1f2e;
+width:90%;
 max-width:600px;
-margin:auto;
-background:#222;
-padding:20px;
-border-radius:10px;
+padding:30px;
+border-radius:20px;
+box-shadow:0 15px 40px rgba(0,0,0,0.4);
+text-align:center;
 }
+
+#question{
+font-size:20px;
+margin-bottom:20px;
+}
+
 button{
-margin:10px;
-padding:10px 20px;
+display:block;
+width:100%;
+margin:10px 0;
+padding:12px;
 border:none;
-border-radius:5px;
+border-radius:12px;
+background:#2d2d44;
+color:white;
+font-size:15px;
 cursor:pointer;
+transition:0.3s;
 }
-.correct{background:green;}
-.wrong{background:red;}
+
+button:hover{
+background:#5561ff;
+transform:scale(1.03);
+}
+
+.correct{
+background:#27ae60 !important;
+}
+
+.wrong{
+background:#c0392b !important;
+}
+
+#nextBtn{
+margin-top:15px;
+background:#5561ff;
+display:none;
+}
+
+#progress{
+margin-bottom:15px;
+font-size:14px;
+color:#bbb;
+}
 </style>
 </head>
 
 <body>
 
-<div class="container">
-<h1>MeeGo: el sistema que pudo cambiar a Nokia</h1>
-<h3>Innovación, decisiones y un final inesperado</h3>
-
-<img src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Nokia_N9.jpg" width="250">
-
+<div class="quiz-box">
+<p id="progress"></p>
 <p id="question"></p>
 <div id="answers"></div>
-<p id="result"></p>
-<button onclick="nextQuestion()">Siguiente</button>
+<button id="nextBtn" onclick="nextQuestion()">Siguiente</button>
 </div>
 
 <script>
 const quiz = [
 {
-question: "¿En qué años ocurrió la guerra de los smartphones?",
-answers: ["2007–2010", "2015–2018", "1999–2002"],
-correct: 0
+question:"¿En qué años ocurrió la guerra de los smartphones?",
+answers:["2007–2010","2015–2018","1999–2002"],
+correct:0
 },
 {
-question: "¿Qué empresas crearon MeeGo?",
-answers: ["Nokia + Microsoft", "Nokia + Intel", "Apple + Intel"],
-correct: 1
+question:"¿Qué empresas crearon MeeGo?",
+answers:["Nokia + Microsoft","Nokia + Intel","Apple + Intel"],
+correct:1
 },
 {
-question: "¿En qué estaba basado MeeGo?",
-answers: ["Windows", "Linux", "Android"],
-correct: 1
+question:"¿En qué estaba basado MeeGo?",
+answers:["Windows","Linux","Android"],
+correct:1
 },
 {
-question: "¿Cuál fue el teléfono estrella de MeeGo?",
-answers: ["Nokia Lumia", "Nokia N9", "Nokia 3310"],
-correct: 1
+question:"¿Cuál fue el teléfono estrella de MeeGo?",
+answers:["Nokia Lumia","Nokia N9","Nokia 3310"],
+correct:1
 },
 {
-question: "¿Por qué falló MeeGo?",
-answers: ["Era malo", "Decisiones empresariales", "No funcionaba"],
-correct: 1
+question:"¿Por qué falló MeeGo?",
+answers:["Era malo","Decisiones empresariales","No funcionaba"],
+correct:1
+},
+{
+question:"¿Por qué Nokia necesitaba un nuevo sistema?",
+answers:["Symbian no competía con iOS y Android","No vendía teléfonos","Para copiar a Apple"],
+correct:0
+},
+{
+question:"¿Qué hacía innovador al Nokia N9?",
+answers:["Teclado físico","Solo gestos sin botón home","Pantalla pequeña"],
+correct:1
+},
+{
+question:"¿Qué sistema fue inspirado por MeeGo?",
+answers:["Windows Phone","Sailfish OS","BlackBerry OS"],
+correct:1
 }
 ];
 
-let current = 0;
-let score = 0;
+let current=0;
+let score=0;
 
 function loadQuestion(){
-document.getElementById("question").innerText = quiz[current].question;
-let answersDiv = document.getElementById("answers");
-answersDiv.innerHTML = "";
+document.getElementById("nextBtn").style.display="none";
+document.getElementById("progress").innerText=
+"Pregunta "+(current+1)+" de "+quiz.length;
 
-quiz[current].answers.forEach((answer, index)=>{
-let btn = document.createElement("button");
-btn.innerText = answer;
-btn.onclick = ()=>checkAnswer(index);
+const q=quiz[current];
+document.getElementById("question").innerText=q.question;
+
+const answersDiv=document.getElementById("answers");
+answersDiv.innerHTML="";
+
+q.answers.forEach((answer,index)=>{
+const btn=document.createElement("button");
+btn.innerText=answer;
+btn.onclick=()=>checkAnswer(btn,index);
 answersDiv.appendChild(btn);
 });
 }
 
-function checkAnswer(index){
-if(index === quiz[current].correct){
+function checkAnswer(button,index){
+const buttons=document.querySelectorAll("#answers button");
+buttons.forEach(btn=>btn.disabled=true);
+
+if(index===quiz[current].correct){
+button.classList.add("correct");
 score++;
-document.getElementById("result").innerText = "¡Correcto!";
 }else{
-document.getElementById("result").innerText = "Incorrecto";
+button.classList.add("wrong");
+buttons[quiz[current].correct].classList.add("correct");
 }
+
+document.getElementById("nextBtn").style.display="block";
 }
 
 function nextQuestion(){
 current++;
-if(current < quiz.length){
+if(current<quiz.length){
 loadQuestion();
-document.getElementById("result").innerText = "";
 }else{
-document.querySelector(".container").innerHTML = 
-"<h2>Juego terminado</h2><p>Tu puntaje fue: "+score+" / "+quiz.length+"</p>";
+document.querySelector(".quiz-box").innerHTML=
+"<h2>Juego terminado 🎉</h2>"+
+"<p>Tu puntaje fue: "+score+" / "+quiz.length+"</p>";
 }
 }
 
@@ -113,4 +177,4 @@ loadQuestion();
 </script>
 
 </body>
-</html>
+</html> 
