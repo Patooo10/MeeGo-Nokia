@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>MeeGo: el sistema que pudo cambiar a Nokia</title>
+<style>
+body{
+font-family: Arial;
+background:#111;
+color:white;
+text-align:center;
+padding:20px;
+}
+.container{
+max-width:600px;
+margin:auto;
+background:#222;
+padding:20px;
+border-radius:10px;
+}
+button{
+margin:10px;
+padding:10px 20px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+.correct{background:green;}
+.wrong{background:red;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>MeeGo: el sistema que pudo cambiar a Nokia</h1>
+<h3>Innovación, decisiones y un final inesperado</h3>
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Nokia_N9.jpg" width="250">
+
+<p id="question"></p>
+<div id="answers"></div>
+<p id="result"></p>
+<button onclick="nextQuestion()">Siguiente</button>
+</div>
+
+<script>
+const quiz = [
+{
+question: "¿En qué años ocurrió la guerra de los smartphones?",
+answers: ["2007–2010", "2015–2018", "1999–2002"],
+correct: 0
+},
+{
+question: "¿Qué empresas crearon MeeGo?",
+answers: ["Nokia + Microsoft", "Nokia + Intel", "Apple + Intel"],
+correct: 1
+},
+{
+question: "¿En qué estaba basado MeeGo?",
+answers: ["Windows", "Linux", "Android"],
+correct: 1
+},
+{
+question: "¿Cuál fue el teléfono estrella de MeeGo?",
+answers: ["Nokia Lumia", "Nokia N9", "Nokia 3310"],
+correct: 1
+},
+{
+question: "¿Por qué falló MeeGo?",
+answers: ["Era malo", "Decisiones empresariales", "No funcionaba"],
+correct: 1
+}
+];
+
+let current = 0;
+let score = 0;
+
+function loadQuestion(){
+document.getElementById("question").innerText = quiz[current].question;
+let answersDiv = document.getElementById("answers");
+answersDiv.innerHTML = "";
+
+quiz[current].answers.forEach((answer, index)=>{
+let btn = document.createElement("button");
+btn.innerText = answer;
+btn.onclick = ()=>checkAnswer(index);
+answersDiv.appendChild(btn);
+});
+}
+
+function checkAnswer(index){
+if(index === quiz[current].correct){
+score++;
+document.getElementById("result").innerText = "¡Correcto!";
+}else{
+document.getElementById("result").innerText = "Incorrecto";
+}
+}
+
+function nextQuestion(){
+current++;
+if(current < quiz.length){
+loadQuestion();
+document.getElementById("result").innerText = "";
+}else{
+document.querySelector(".container").innerHTML = 
+"<h2>Juego terminado</h2><p>Tu puntaje fue: "+score+" / "+quiz.length+"</p>";
+}
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
